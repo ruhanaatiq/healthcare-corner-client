@@ -8,6 +8,9 @@ import 'aos/dist/aos.css';
 import AuthProvider from './contexts/AuthProvider.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// Initialize QueryClient before the App function
+const queryClient = new QueryClient();
+
 // Initialize AOS animation library
 function App() {
   useEffect(() => {
@@ -27,8 +30,6 @@ function App() {
     </div>
   );
 }
-
-const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
