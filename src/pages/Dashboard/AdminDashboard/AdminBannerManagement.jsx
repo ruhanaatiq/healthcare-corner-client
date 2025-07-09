@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../hooks/useAxios';
 
 const AdminBannerManagement = () => {
   const [medicines, setMedicines] = useState([]);
@@ -8,7 +8,7 @@ const AdminBannerManagement = () => {
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/medicines');
+        const response = await axios.get('api/medicines');
         setMedicines(response.data);
       } catch (error) {
         console.error('Error fetching medicines:', error);
@@ -20,7 +20,7 @@ const AdminBannerManagement = () => {
   // Toggle banner status
   const toggleBannerStatus = async (id, currentStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/api/medicines/${id}/toggle-banner`);
+      await axios.patch(`/api/medicines/${id}/toggle-banner`);
       setMedicines(prevMedicines =>
         prevMedicines.map(medicine =>
           medicine._id === id ? { ...medicine, isBanner: !currentStatus } : medicine

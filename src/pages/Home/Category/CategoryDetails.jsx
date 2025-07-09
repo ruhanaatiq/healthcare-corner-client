@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import useAxios from '../../../hooks/useAxios';
 import MedicineModal from './MedicineModal';
 
 const CategoryDetails = () => {
-  const { categoryId } = useParams();  // Use the categoryId from the URL
+  const { categoryId } = useParams();
+  const axios = useAxios(); // ✅ use your axios instance here
   const [medicines, setMedicines] = useState([]);
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -13,7 +14,8 @@ const CategoryDetails = () => {
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const response = await axios.get(`/api/medicines/category/${categoryId}`); // Adjust route as needed
+        const response = await axios.get(`/api/medicines/category/${categoryId}`);
+        console.log("Fetched medicines:", response.data); // Optional debug
         setMedicines(response.data);
       } catch (error) {
         console.error("Error fetching medicines:", error);
@@ -21,11 +23,11 @@ const CategoryDetails = () => {
     };
 
     fetchMedicines();
-  }, [categoryId]);
+  }, [axios, categoryId]);
 
   const handleAddToCart = (medicine) => {
-    // Implement the logic to add the medicine to the cart
     console.log('Medicine added to cart:', medicine);
+    // Implement your add to cart logic here
   };
 
   const handleViewMedicine = (medicine) => {

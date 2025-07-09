@@ -13,35 +13,35 @@ import CategoryDetails from "../pages/Home/Category/CategoryDetails";
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />, // Main layout for the app
+    element: <MainLayout />,
     children: [
       {
         index: true,
-        element: <Home /> // Home page route
+        element: <Home />
       },
       {
-        path: '/auth', // Base path for authentication
-        element: <AuthLayout />, 
+        path: 'category',
+        element: <CategoryCardContainer /> // ✅ Correct: now /category
+      },
+      {
+        path: 'category/:categoryId',
+        element: <CategoryDetails /> // ✅ Correct: now /category/:categoryId
+      },
+      {
+        path: 'auth',
+        element: <AuthLayout />,
         children: [
           {
-            path: 'login', // Login route
+            path: 'login',
             element: <Login />
           },
           {
-            path: 'register', // Register route
+            path: 'register',
             element: <Register />
-          },
-          // Adjust these to be relative to /auth
-          {
-            path: 'category', // Now /auth/category
-            element: <CategoryCardContainer /> // Display all categories
-          },
-          {
-            path: 'category/:categoryId', // Now /auth/category/:categoryId
-            element: <CategoryDetails /> // Display medicines for a specific category
-          },
+          }
         ]
       }
     ]
   }
 ]);
+

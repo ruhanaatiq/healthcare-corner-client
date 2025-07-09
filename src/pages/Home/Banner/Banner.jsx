@@ -1,43 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import useAxios from '../../../hooks/useAxios';
 
 const Banner = () => {
+  const axios = useAxios();
   const [bannerMedicines, setBannerMedicines] = useState([]);
-  const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null); // For error handling
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetching the medicines for the banner
   useEffect(() => {
     const fetchBannerMedicines = async () => {
       try {
         const response = await axios.get('/api/medicines');
         console.log("Response from backend:", response.data);
 
-        // Ensure response.data is an array and filter out the banner medicines
         if (Array.isArray(response.data)) {
-          const bannerMedicines = response.data.filter(medicine => medicine.isBanner);
+          const bannerMedicines = response.data.filter(m => m.isBanner);
           setBannerMedicines(bannerMedicines);
         } else {
-          console.error("Expected response.data to be an array, but got:", typeof response.data);
+          console.error("Expected array, got:", typeof response.data, response.data);
         }
       } catch (error) {
         console.error("Error fetching banner medicines:", error);
         setError('Failed to fetch banner medicines');
       } finally {
-        setLoading(false); // Set loading to false once fetch is complete
+        setLoading(false);
       }
     };
 
     fetchBannerMedicines();
-  }, []);
+  }, [axios]);
 
-  if (loading) {
-    return <div className="text-center text-white p-4">Loading banner medicines...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-white p-4">{error}</div>;
-  }
+  if (loading) return <div className="text-center text-white p-4">Loading banner medicines...</div>;
+  if (error) return <div className="text-center text-white p-4">{error}</div>;
 
   return (
     <div className="carousel w-full">

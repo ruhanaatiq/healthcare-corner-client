@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Banner from './Banner/Banner';
-import CategoryCard from './Category/CategoryCard';
+import CategoryCardContainer from './Category/CategoryCardContainer'; // assuming this renders multiple cards
 import DiscountProducts from './DiscountProducts/DiscountProducts';
+import useAxios from '../../hooks/useAxios'; // adjust path as needed
 
 const Home = () => {
-    return (
-        <div>
-            <Banner></Banner>
-            <CategoryCard></CategoryCard>
-            <DiscountProducts></DiscountProducts>
-   </div>
-    );
+  const axios = useAxios();
+  const [medicines, setMedicines] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/medicines')
+      .then((res) => {
+        console.log('Fetched medicines:', res.data);
+        setMedicines(res.data);
+      })
+      .catch((err) => console.error('Error fetching medicines:', err));
+  }, [axios]);
+
+  return (
+    <div>
+      <Banner />
+      <CategoryCardContainer />
+      <DiscountProducts products={medicines} /> {/* ✅ now products is passed */}
+    </div>
+  );
 };
 
 export default Home;
