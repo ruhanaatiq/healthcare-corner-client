@@ -1,11 +1,11 @@
 import React from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import PaymentForm from '../Shared/PaymentForm';
+import PaymentForm from '../../pages/shared/Payment/PaymentForm';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutPage = () => (
+const Checkout = () => (
   <div className="max-w-xl mx-auto p-4">
     <h2 className="text-2xl font-bold mb-4">Checkout</h2>
     <Elements stripe={stripePromise}>
@@ -14,4 +14,4 @@ const CheckoutPage = () => (
   </div>
 );
 
-export default CheckoutPage;
+export default Checkout;

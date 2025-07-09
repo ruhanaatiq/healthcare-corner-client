@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../contexts/AuthContext'; // Import your custom useAuth hook
+import useAuth from '../../../hooks/useAuth'; // ✅ correct
 import { FaShoppingCart } from 'react-icons/fa'; // Cart icon
 import logo from '../../../assets/logo.png'; // Path to your logo image
 
