@@ -18,6 +18,8 @@ import AdminRoute from "../routes/AdminRoute";
 import AdminOrders from "../pages/Dashboard/AdminDashboard/AdminOrders"
 import Checkout from "../pages/Checkout/Checkout";
 import Shop from "../pages/Home/Shop";
+import AdminCategories from "../pages/Dashboard/AdminDashboard/AdminCategories";
+import AdminPayments from "../pages/Dashboard/AdminDashboard/AdminPayments";
 
 export const router = createBrowserRouter([
   {
@@ -91,6 +93,14 @@ export const router = createBrowserRouter([
           {
             path: 'orders',
             element: <AdminOrders/>
+          },
+          {
+            path: 'categories',
+            element:<AdminCategories></AdminCategories>
+          },
+          {
+            path:'payments',
+            element:<AdminPayments></AdminPayments>
           }
         ]
       }

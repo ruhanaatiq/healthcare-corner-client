@@ -1,25 +1,29 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { CartContext } from '../../../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { CartContext } from '../../../contexts/CartContext';
+import useAuth from '../../../hooks/useAuth';
 
 const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const { cart, dispatch } = useContext(CartContext);
-  const [clientSecret, setClientSecret] = useState('');
+  const { user } = useAuth();
 
+  const [clientSecret, setClientSecret] = useState('');
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  // Create PaymentIntent mutation
   const createPaymentIntent = useMutation({
     mutationFn: (amount) =>
-      axios.post('/api/create-payment-intent', { amount }).then(res => res.data),
+      axiosSecure.post('/api/create-payment-intent', { amount }).then(res => res.data),
     onSuccess: (data) => {
       setClientSecret(data.clientSecret);
-    }
+    },
   });
 
   useEffect(() => {
@@ -28,6 +32,7 @@ const PaymentForm = () => {
     }
   }, [total]);
 
+  // Handle payment form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements || !clientSecret) return;
@@ -39,24 +44,35 @@ const PaymentForm = () => {
     if (error) {
       console.error(error);
     } else {
+      // Save the order to the backend
       const order = {
-        userName: 'Test User', // replace with actual user
+        userName: user?.displayName || 'Anonymous',
+        userEmail: user?.email,
         items: cart,
         total,
-        paymentId: paymentIntent.id
+        paymentId: paymentIntent.id,
+        status: 'pending', // Default status
+        createdAt: new Date().toISOString(),
       };
 
-      // Save order to backend (optional)
-      const res = await axios.post('/api/orders', order);
-      dispatch({ type: 'CLEAR' });
-      navigate('/invoice', { state: res.data }); // pass order as state
+      try {
+        const res = await axiosSecure.post('/api/orders', order);
+        dispatch({ type: 'CLEAR' });
+        navigate('/invoice', { state: res.data });
+      } catch (err) {
+        console.error('Order saving failed:', err);
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <CardElement className="p-2 border rounded" />
-      <button disabled={!stripe || !clientSecret} className="btn btn-primary mt-4">
+      <button
+        type="submit"
+        disabled={!stripe || !clientSecret}
+        className="btn btn-primary mt-4"
+      >
         Pay ${total.toFixed(2)}
       </button>
     </form>
