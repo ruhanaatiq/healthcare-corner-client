@@ -24,6 +24,7 @@ import SellerDashboardLayout from "../pages/Dashboard/SellerDashboard/SellerDash
 import AdvertisementRequests from "../pages/Dashboard/SellerDashboard/AdvertisementRequests";
 import PaymentHistory from "../pages/Dashboard/SellerDashboard/PaymentHistory";
 import SellerMedicines from "../pages/Dashboard/SellerDashboard/SellerMedicines";
+import SellerRoute from "../routes/SellerRoute";
 
 export const router = createBrowserRouter([
   {
@@ -109,15 +110,14 @@ export const router = createBrowserRouter([
         ]
       },
       {
-        path:'seller',
-        element:<PrivateRoute>
-          <SellerDashboardLayout></SellerDashboardLayout>
+        path:'seller-dasboard',
+        element:<PrivateRoute><SellerRoute>
+          <SellerDashboardLayout></SellerDashboardLayout></SellerRoute>
         </PrivateRoute>,
-        children: [
-    { index: true, element: <SellerHome /> },
-    { path: 'manage-medicines', element: <SellerMedicines /> },
-    { path: 'payment-history', element: <PaymentHistory /> },
-    { path: 'advertise-request', element: <AdvertisementRequests /> }
+         children: [
+    { path: 'medicines', element: <SellerMedicines /> },
+    { path: 'payments', element: <PaymentHistory /> },
+    { path: 'ads', element: <AdvertisementRequests /> },
           
         ]
       }
