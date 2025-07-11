@@ -34,7 +34,7 @@ const Banner = () => {
   if (error) return <div className="text-center text-white p-4">{error}</div>;
 
   return (
-    <div className="carousel w-full">
+    <div className="carousel w-full z-10 relative">
       {bannerMedicines.length > 0 ? (
         bannerMedicines.map(medicine => (
           <div key={medicine._id} className="carousel-item w-full relative">

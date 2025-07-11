@@ -25,102 +25,69 @@ import AdvertisementRequests from "../pages/Dashboard/SellerDashboard/Advertisem
 import PaymentHistory from "../pages/Dashboard/SellerDashboard/PaymentHistory";
 import SellerMedicines from "../pages/Dashboard/SellerDashboard/SellerMedicines";
 import SellerRoute from "../routes/SellerRoute";
+import UserDashboardLayout from "../pages/Dashboard/UserDashboard/UserDashboardLayout";
+import UserPaymentHistory from "../pages/Dashboard/UserDashboard/UserPaymentHistory";
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      {
-        index: true,
-        element: <Home />
-      },
-      {
-        path: 'category',
-        element: <CategoryCardContainer />
-      },
-      {
-        path: 'category/:categoryId',
-        element: <CategoryDetails />
-      },
-      {
-        path: 'cart',
-        element: <CartPage />
-      },
-      {
-  path: 'shop',
-  element: <Shop/>
-},
+      { index: true, element: <Home /> },
+      { path: 'category', element: <CategoryCardContainer /> },
+      { path: 'category/:categoryId', element: <CategoryDetails /> },
+      { path: 'cart', element: <CartPage /> },
+      { path: 'shop', element: <Shop /> },
       {
         path: 'checkout',
-        element: (
-          <PrivateRoute>
-            <Checkout />
-          </PrivateRoute>
-        )
+        element: <PrivateRoute><Checkout /></PrivateRoute>
       },
       {
-        path: '/invoice/:id',
-        element: (
-          <PrivateRoute>
-            <Invoice />
-          </PrivateRoute>
-        )
+        path: 'invoice/:id',
+        element: <PrivateRoute><Invoice /></PrivateRoute>
       },
       {
         path: 'auth',
         element: <AuthLayout />,
         children: [
-          {
-            path: 'login',
-            element: <Login />
-          },
-          {
-            path: 'register',
-            element: <Register />
-          }
-        ]
-      },
-      {
-        path: 'admin',
-        element: (
-          <PrivateRoute>
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          </PrivateRoute>
-        ),
-        children: [
-          {
-            path: 'users',
-            element: <AdminUsers />
-          },
-          {
-            path: 'orders',
-            element: <AdminOrders/>
-          },
-          {
-            path: 'categories',
-            element:<AdminCategories></AdminCategories>
-          },
-          {
-            path:'payments',
-            element:<AdminPayments></AdminPayments>
-          }
-        ]
-      },
-      {
-        path:'seller-dasboard',
-        element:<PrivateRoute><SellerRoute>
-          <SellerDashboardLayout></SellerDashboardLayout></SellerRoute>
-        </PrivateRoute>,
-         children: [
-    { path: 'medicines', element: <SellerMedicines /> },
-    { path: 'payments', element: <PaymentHistory /> },
-    { path: 'ads', element: <AdvertisementRequests /> },
-          
+          { path: 'login', element: <Login /> },
+          { path: 'register', element: <Register /> }
         ]
       }
+    ]
+  },
+  {
+    path: 'admin',
+    element: (
+      <PrivateRoute>
+        <AdminRoute><AdminDashboard /></AdminRoute>
+      </PrivateRoute>
+    ),
+    children: [
+      { path: 'users', element: <AdminUsers /> },
+      { path: 'orders', element: <AdminOrders /> },
+      { path: 'categories', element: <AdminCategories /> },
+      { path: 'payments', element: <AdminPayments /> }
+    ]
+  },
+  {
+    path: 'seller-dasboard',
+    element: (
+      <PrivateRoute>
+        <SellerRoute><SellerDashboardLayout /></SellerRoute>
+      </PrivateRoute>
+    ),
+    children: [
+      { path: 'medicines', element: <SellerMedicines /> },
+      { path: 'payments', element: <PaymentHistory /> },
+      { path: 'ads', element: <AdvertisementRequests /> }
+    ]
+  },
+  {
+    path: '/dashboard',
+    element: <PrivateRoute><UserDashboardLayout /></PrivateRoute>,
+    children: [
+      { path: 'payment-history', element: <UserPaymentHistory /> }
     ]
   }
 ]);
