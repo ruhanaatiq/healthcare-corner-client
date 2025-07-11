@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import useAxios from '../../hooks/useAxios';
 import { CartContext } from '../../contexts/CartContext';
 import MedicineModal from '../Home/Category/MedicineModal';
-
+import toast from 'react-hot-toast';
 const Shop = () => {
   const axios = useAxios();
   const [medicines, setMedicines] = useState([]);
@@ -22,8 +22,9 @@ const Shop = () => {
   };
 
   const handleAddToCart = (medicine) => {
-    dispatch({ type: 'ADD', payload: medicine });
-  };
+  dispatch({ type: 'ADD', payload: medicine });
+  toast.success(`${medicine.name} added to cart`);
+};
 
   const closeModal = () => {
     setModalOpen(false);

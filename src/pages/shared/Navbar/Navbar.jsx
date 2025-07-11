@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth'; // ✅ correct
 import { FaShoppingCart } from 'react-icons/fa'; // Cart icon
 import logo from '../../../assets/logo.png'; // Path to your logo image
-
+import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const { user, logout } = useAuth(); // Get user info and logout function from context
   const [isDropdownOpen, setDropdownOpen] = useState(false); // To toggle the dropdown menu
-
+const navigate = useNavigate();
   const handleDropdownToggle = () => setDropdownOpen(!isDropdownOpen); // Toggle dropdown state
 
   return (
@@ -49,11 +49,19 @@ const Navbar = () => {
                   <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Update Profile</Link>
                   <Link to="/dashboard" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</Link>
                   <button
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+  onClick={async () => {
+    try {
+      await logout();
+      navigate('/'); // or '/login'
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  }}
+  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+>
+  Logout
+</button>
+
                 </div>
               )}
             </div>

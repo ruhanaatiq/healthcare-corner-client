@@ -58,8 +58,7 @@ const PaymentForm = () => {
       try {
         const res = await axiosSecure.post('/api/orders', order);
         dispatch({ type: 'CLEAR' });
-        navigate('/invoice', { state: res.data });
-      } catch (err) {
+navigate(`/invoice/${res.data.insertedId}`, { state: { order } });      } catch (err) {
         console.error('Order saving failed:', err);
       }
     }

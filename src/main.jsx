@@ -7,8 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import AuthProvider from './contexts/AuthProvider.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {  CartProvider } from './contexts/CartContext.jsx';
-
+import { Toaster } from 'react-hot-toast';
 // Initialize QueryClient before the App function
 const queryClient = new QueryClient();
 
@@ -22,15 +21,14 @@ function App() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <CartProvider>
-          <RouterProvider router={router} />
-          </CartProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </div>
+   <div className="max-w-7xl mx-auto">
+    <Toaster position="top-right" />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />
+      </AuthProvider>
+    </QueryClientProvider>
+  </div>
   );
 }
 

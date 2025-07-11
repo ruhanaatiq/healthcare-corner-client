@@ -1,9 +1,14 @@
-import React, { createContext, useReducer } from 'react';
+// CartContext.jsx
+import React, { createContext, useReducer, useEffect, useContext } from 'react';
+import useAxiosSecure from '../hooks/useAxiosSecure';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
+    case 'SET':
+      return action.payload;
     case 'ADD':
       const existing = state.find(item => item._id === action.payload._id);
       if (existing) {
@@ -39,6 +44,38 @@ const cartReducer = (state, action) => {
 
 export const CartProvider = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, []);
+  const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (user?.email) {
+        try {
+          const res = await axiosSecure.get(`/api/cart/${user.email}`);
+          dispatch({ type: 'SET', payload: res.data || [] });
+        } catch (err) {
+          console.error('Cart fetch error:', err);
+        }
+      }
+    };
+    fetchCart();
+  }, [user?.email]); // 💡 safest dependency
+
+  useEffect(() => {
+    const saveCart = async () => {
+      if (user?.email) {
+        try {
+          await axiosSecure.post('/api/cart', {
+            userEmail: user.email,
+            cartItems: cart,
+          });
+        } catch (err) {
+          console.error('Cart save error:', err);
+        }
+      }
+    };
+    saveCart();
+  }, [cart, user?.email]);
 
   return (
     <CartContext.Provider value={{ cart, dispatch }}>

@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, profileInfo);
   };
 
-  const logOut = () => {
+  const logout = () => {
     setLoading(true);
     return signOut(auth);
   };
@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
     signIn,
     signInWithGoogle,
     updateUserProfile,
-    logOut,
+    logout,
   };
 
   return (

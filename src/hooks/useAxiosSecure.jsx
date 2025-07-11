@@ -1,43 +1,52 @@
 import axios from 'axios';
-import React from 'react';
+import { useEffect } from 'react';
 import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const axiosSecure = axios.create({
-    baseURL: `http://localhost:5000`
+  baseURL: `http://localhost:5000`,
 });
 
 const useAxiosSecure = () => {
-    const { user, logOut } = useAuth();
-    const navigate = useNavigate();
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
 
-    axiosSecure.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${user.accessToken}`
+  useEffect(() => {
+    if (!user?.accessToken) return;
+
+    // Set up request interceptor
+    const requestInterceptor = axiosSecure.interceptors.request.use(
+      config => {
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
         return config;
-    }, error => {
-        return Promise.reject(error);
-    })
+      },
+      error => Promise.reject(error)
+    );
 
-    axiosSecure.interceptors.response.use(res => {
-        return res;
-    }, error => {
-        const status = error.status;
+    // Set up response interceptor
+    const responseInterceptor = axiosSecure.interceptors.response.use(
+      res => res,
+      error => {
+        const status = error.response?.status;
         if (status === 403) {
-            navigate('/forbidden');
+          navigate('/forbidden');
+        } else if (status === 401) {
+          logOut()
+            .then(() => navigate('/auth/login'))
+            .catch(() => {});
         }
-        else if (status === 401) {
-            logOut()
-                .then(() => {
-                    navigate('/login')
-                })
-                .catch(() => { })
-        }
-
         return Promise.reject(error);
-    })
+      }
+    );
 
+    // Cleanup on unmount or when user changes
+    return () => {
+      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.response.eject(responseInterceptor);
+    };
+  }, [user, logOut, navigate]);
 
-    return axiosSecure;
+  return axiosSecure;
 };
 
 export default useAxiosSecure;
