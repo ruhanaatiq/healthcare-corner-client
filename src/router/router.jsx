@@ -20,6 +20,10 @@ import Checkout from "../pages/Checkout/Checkout";
 import Shop from "../pages/Home/Shop";
 import AdminCategories from "../pages/Dashboard/AdminDashboard/AdminCategories";
 import AdminPayments from "../pages/Dashboard/AdminDashboard/AdminPayments";
+import SellerDashboardLayout from "../pages/Dashboard/SellerDashboard/SellerDashboardLayout";
+import AdvertisementRequests from "../pages/Dashboard/SellerDashboard/AdvertisementRequests";
+import PaymentHistory from "../pages/Dashboard/SellerDashboard/PaymentHistory";
+import SellerMedicines from "../pages/Dashboard/SellerDashboard/SellerMedicines";
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +106,19 @@ export const router = createBrowserRouter([
             path:'payments',
             element:<AdminPayments></AdminPayments>
           }
+        ]
+      },
+      {
+        path:'seller',
+        element:<PrivateRoute>
+          <SellerDashboardLayout></SellerDashboardLayout>
+        </PrivateRoute>,
+        children: [
+    { index: true, element: <SellerHome /> },
+    { path: 'manage-medicines', element: <SellerMedicines /> },
+    { path: 'payment-history', element: <PaymentHistory /> },
+    { path: 'advertise-request', element: <AdvertisementRequests /> }
+          
         ]
       }
     ]
