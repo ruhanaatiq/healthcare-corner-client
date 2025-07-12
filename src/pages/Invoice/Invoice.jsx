@@ -9,6 +9,7 @@ const Invoice = () => {
   const axiosSecure = useAxiosSecure();
   const componentRef = useRef(null);
   const [order, setOrder] = useState(null);
+  const [readyToPrint, setReadyToPrint] = useState(false);
 
   // Fetch order by ID
   useEffect(() => {
@@ -16,13 +17,15 @@ const Invoice = () => {
       try {
         const res = await axiosSecure.get(`/api/orders/${id}`);
         setOrder(res.data);
+              setTimeout(() => setReadyToPrint(true), 300);
       } catch (err) {
         console.error('Error fetching invoice:', err);
       }
     };
     fetchOrder();
-  }, [id]);
+  }, [id,axiosSecure]);
 
+  // Print logic (won’t run until `componentRef.current` is not null)
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: `Invoice_${order?.userName || 'User'}`,
@@ -46,7 +49,7 @@ const Invoice = () => {
 
         <table className="w-full border border-collapse text-left">
           <thead>
-            <tr className="bg-gray-100 border-b">
+            <tr className="bg-red-600 border-b">
               <th className="p-2 border">Item</th>
               <th className="p-2 border">Qty</th>
               <th className="p-2 border">Price</th>
@@ -55,7 +58,7 @@ const Invoice = () => {
           </thead>
           <tbody>
             {(order.items || []).map((item) => (
-              <tr key={item._id} className="border-b">
+              <tr key={item._id} className="border-b text-red-600">
                 <td className="p-2 border">{item.name}</td>
                 <td className="p-2 border">{item.quantity}</td>
                 <td className="p-2 border">${item.price.toFixed(2)}</td>
@@ -72,11 +75,13 @@ const Invoice = () => {
         </div>
       </div>
 
-      <div className="text-center mt-6">
-        <button onClick={handlePrint} className="btn btn-primary">
-          Download PDF
-        </button>
-      </div>
+      {readyToPrint && (
+  <div className="text-center mt-6">
+    <button onClick={handlePrint} className="btn btn-primary">
+      Download PDF
+    </button>
+  </div>
+)}
     </div>
   );
 };

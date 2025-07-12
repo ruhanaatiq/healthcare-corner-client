@@ -1,23 +1,33 @@
 import { useEffect, useState } from 'react';
 import useAuth from './useAuth';
-import useAxiosSecure from './useAxiosSecure';
+import useAxios from './useAxiosSecure';
 
 const useRole = () => {
-  const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const { user, loading: authLoading } = useAuth();
+  const axiosSecure = useAxios();
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.email) {
-      axiosSecure.get(`/users/role/${user.email}`)
-        .then(res => {
-          setRole(res.data?.role); // expected { role: 'admin' } from backend
+    const fetchRole = async () => {
+      if (authLoading) return; // Don't fetch if auth is still loading
+
+      if (user?.email) {
+        try {
+          const res = await axiosSecure.get(`/api/users/role/${user.email}`);
+          setRole(res.data?.role);
+        } catch (err) {
+          console.error('❌ Failed to fetch role', err);
+        } finally {
           setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  }, [user]);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchRole();
+  }, [user?.email, axiosSecure, authLoading]);
 
   return { role, loading };
 };

@@ -5,7 +5,7 @@ import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
 import useAxios from '../../../hooks/useAxiosSecure';
 import SocialLogin from '../SocialLogin/SocialLogin';
-
+import { redirectByRole } from '../../../utils/redirectByRole';
 const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { createUser, updateUserProfile } = useAuth();
@@ -38,39 +38,40 @@ const Register = () => {
   };
 
   // 🧾 Submit registration form
-  const onSubmit = async (data) => {
-    try {
-      const result = await createUser(data.email.trim(), data.password);
-      const user = result.user;
+ const onSubmit = async (data) => {
+  try {
+    const result = await createUser(data.email.trim(), data.password);
+    const user = result.user;
 
-      await updateUserProfile({
-        displayName: data.name,
-        photoURL: profilePic || ''
-      });
+    await updateUserProfile({
+      displayName: data.name,
+      photoURL: profilePic || ''
+    });
 
-      const userInfo = {
-        email: data.email.trim(),
-        name: data.name,
-        photoURL: profilePic || '',
-        role: 'user',
-        created_at: new Date().toISOString(),
-        last_log_in: new Date().toISOString()
-      };
+    const userInfo = {
+      email: data.email.trim(),
+      name: data.name,
+      photoURL: profilePic || '',
+      role: 'user',
+      created_at: new Date().toISOString(),
+      last_log_in: new Date().toISOString()
+    };
 
-      const res = await axiosSecure.post('/users', userInfo);
-      console.log('✅ User saved to DB:', res.data);
+    await axiosSecure.post('/users', userInfo);
 
-      navigate(from);
-    } catch (err) {
-      if (err.code === 'auth/email-already-in-use') {
-        alert('This email is already registered. Please log in.');
-        navigate('/auth/login');
-      } else {
-        console.error('❌ Registration failed:', err);
-        alert('Something went wrong. Please try again later.');
-      }
+    // ✅ Redirect based on role
+    await redirectByRole(user.email, axiosSecure, navigate);
+
+  } catch (err) {
+    if (err.code === 'auth/email-already-in-use') {
+      alert('This email is already registered. Please log in.');
+      navigate('/auth/login');
+    } else {
+      console.error('❌ Registration failed:', err);
+      alert('Something went wrong. Please try again later.');
     }
-  };
+  }
+};
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-auto mt-10">

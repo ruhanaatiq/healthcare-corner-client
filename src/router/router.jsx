@@ -13,7 +13,6 @@ import PrivateRoute from "../routes/PrivateRoute";
 import CheckoutPage from "../pages/Checkout/Checkout";
 import Invoice from "../pages/Invoice/Invoice";
 import AdminUsers from "../pages/Dashboard/AdminDashboard/AdminUsers";
-import AdminDashboard from "../pages/Dashboard/AdminDashboard/AdminDashboardLayout";
 import AdminRoute from "../routes/AdminRoute";
 import AdminOrders from "../pages/Dashboard/AdminDashboard/AdminOrders"
 import Checkout from "../pages/Checkout/Checkout";
@@ -27,6 +26,9 @@ import SellerMedicines from "../pages/Dashboard/SellerDashboard/SellerMedicines"
 import SellerRoute from "../routes/SellerRoute";
 import UserDashboardLayout from "../pages/Dashboard/UserDashboard/UserDashboardLayout";
 import UserPaymentHistory from "../pages/Dashboard/UserDashboard/UserPaymentHistory";
+import AdminDashboardLayout from "../pages/Dashboard/AdminDashboard/AdminDashboardLayout";
+import AdminSalesReport from "../pages/Dashboard/AdminDashboard/AdminSalesReport";
+import Forbidden from "../pages/Forbidden/Forbidden";
 
 export const router = createBrowserRouter([
   {
@@ -57,21 +59,22 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: 'admin',
+    path: '/admin',
     element: (
       <PrivateRoute>
-        <AdminRoute><AdminDashboard /></AdminRoute>
+        <AdminRoute><AdminDashboardLayout /></AdminRoute>
       </PrivateRoute>
     ),
     children: [
       { path: 'users', element: <AdminUsers /> },
       { path: 'orders', element: <AdminOrders /> },
       { path: 'categories', element: <AdminCategories /> },
-      { path: 'payments', element: <AdminPayments /> }
+      { path: 'payments', element: <AdminPayments /> },
+      {path:'sales-report', element:<AdminSalesReport></AdminSalesReport>}
     ]
   },
   {
-    path: 'seller-dasboard',
+    path: '/seller-dashboard',
     element: (
       <PrivateRoute>
         <SellerRoute><SellerDashboardLayout /></SellerRoute>
@@ -89,5 +92,9 @@ export const router = createBrowserRouter([
     children: [
       { path: 'payment-history', element: <UserPaymentHistory /> }
     ]
-  }
+  },
+  {
+  path: 'forbidden',
+  element: <Forbidden />
+}
 ]);

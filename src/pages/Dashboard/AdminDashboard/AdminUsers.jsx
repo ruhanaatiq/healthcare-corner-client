@@ -32,7 +32,7 @@ const AdminUsers = () => {
       ) : (
         <table className="w-full table-auto border">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-red-600">
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Email</th>
               <th className="p-2 border">Current Role</th>
@@ -49,7 +49,7 @@ const AdminUsers = () => {
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 text-red-500"
                   >
                     <option value="user">User</option>
                     <option value="seller">Seller</option>
