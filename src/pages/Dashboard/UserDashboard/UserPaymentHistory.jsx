@@ -1,52 +1,48 @@
-import React from 'react';
-import useAuth from '../../../hooks/useAuth';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from "react";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAuth from "../../../hooks/useAuth";
 
 const UserPaymentHistory = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [payments, setPayments] = useState([]);
 
-  const { data: payments = [], isLoading } = useQuery({
-    queryKey: ['user-payments', user?.email],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/payments/user/${user?.email}`);
-      return res.data;
-    },
-    enabled: !!user?.email,
-  });
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const res = await axiosSecure.get('/api/payments');
+        const filtered = res.data.filter(p => p.userEmail === user.email);
+        setPayments(filtered);
+      } catch (err) {
+        console.error("❌ Error fetching payments:", err);
+      }
+    };
 
-  if (isLoading) return <p className="text-center mt-8">Loading...</p>;
+    fetchPayments();
+  }, [user, axiosSecure]);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">My Payment History</h2>
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Medicine</th>
-              <th>Amount</th>
-              <th>Transaction ID</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payments.map((pay, index) => (
-              <tr key={pay._id}>
-                <td>{index + 1}</td>
-                <td>{pay.medicineName}</td>
-                <td>${pay.amount}</td>
-                <td>{pay.transactionId}</td>
-                <td className={pay.status === 'paid' ? 'text-green-500' : 'text-orange-500'}>
-                  {pay.status}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Your Payment History</h2>
+      {payments.length === 0 ? (
+        <p>No payment records found.</p>
+      ) : (
+        <div className="space-y-4">
+          {payments.map((payment, idx) => (
+            <div key={idx} className="border p-4 rounded shadow bg-white">
+              <p><strong>Total:</strong> ${payment.total}</p>
+              <p><strong>Status:</strong> {payment.status}</p>
+              <p><strong>Date:</strong> {new Date(payment.createdAt).toLocaleString()}</p>
+              <p><strong>Payment ID:</strong> {payment.paymentId}</p>
+              <ul className="mt-2 list-disc pl-5">
+                {payment.items?.map((item, i) => (
+                  <li key={i}>{item.name} - ${item.price}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -5,19 +5,20 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { redirectByRole } from '../../../utils/redirectByRole';
+import { toast } from 'react-toastify';
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const { signIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure(); // ✅ added this
+  const axiosSecure = useAxiosSecure();
   const from = location.state?.from || '/';
 
-  // Save user to DB (optional if you want to track login time)
+  // Save user to DB (optional: update last login time)
   const saveUserToDB = async (user) => {
     try {
-      await fetch('http://localhost:5000/api/users', {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -37,54 +38,70 @@ const Login = () => {
       const result = await signIn(data.email, data.password);
       const user = result.user;
 
-      await saveUserToDB(user); // Optional: update last login timestamp
-      await redirectByRole(user.email, axiosSecure, navigate); // ✅ Role-based redirection
-
+      await saveUserToDB(user);
+      await redirectByRole(user.email, axiosSecure, navigate);
+      toast.success('Login successful!');
     } catch (error) {
       console.error('Login error:', error);
+      toast.error('Invalid email or password. Please try again.');
     }
   };
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
       <div className="card-body">
-        <h1 className="text-5xl font-bold">Please Login</h1>
+        <h1 className="text-3xl font-bold mb-4">Please Login</h1>
+
         <form onSubmit={handleSubmit(onSubmit)}>
-          <fieldset className="fieldset">
-            <label className="label">Email</label>
-            <input
-              type="email"
-              {...register('email')}
-              className="input"
-              placeholder="Email"
-            />
+          {/* Email */}
+          <label className="label">Email</label>
+          <input
+            type="email"
+            {...register('email', { required: true })}
+            className="input input-bordered w-full"
+            placeholder="Email"
+          />
+          {errors.email && <p className="text-red-500">Email is required</p>}
 
-            <label className="label">Password</label>
-            <input
-              type="password"
-              {...register('password', {
-                required: true,
-                minLength: 6
-              })}
-              className="input"
-              placeholder="Password"
-            />
-            {errors.password?.type === 'required' && (
-              <p className='text-red-500'>Password is required</p>
-            )}
-            {errors.password?.type === 'minLength' && (
-              <p className='text-red-500'>Password must be at least 6 characters</p>
-            )}
+          {/* Password */}
+          <label className="label mt-4">Password</label>
+          <input
+            type="password"
+            {...register('password', { required: true, minLength: 6 })}
+            className="input input-bordered w-full"
+            placeholder="Password"
+          />
+          {errors.password?.type === 'required' && (
+            <p className="text-red-500">Password is required</p>
+          )}
+          {errors.password?.type === 'minLength' && (
+            <p className="text-red-500">Password must be at least 6 characters</p>
+          )}
 
-            <div><a className="link link-hover">Forgot password?</a></div>
+          {/* Forgot Password */}
+          <div className="mt-2 mb-4">
+            <a className="link link-hover text-sm">Forgot password?</a>
+          </div>
 
-            <button className="btn btn-primary text-black mt-4">Login</button>
-          </fieldset>
-
-          <p><small>New to this website? <Link state={{ from }} className="btn btn-link" to="/register">Register</Link></small></p>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </button>
         </form>
 
-        {/* 🔐 Social Login */}
+        {/* Register Link */}
+        <p className="mt-4 text-center text-sm">
+          New to this website?{' '}
+          <Link state={{ from }} className="link" to="/register">
+            Register
+          </Link>
+        </p>
+
+        {/* Social Login */}
         <SocialLogin />
       </div>
     </div>

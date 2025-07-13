@@ -6,8 +6,10 @@ import useAuth from '../../../hooks/useAuth';
 import useAxios from '../../../hooks/useAxiosSecure';
 import SocialLogin from '../SocialLogin/SocialLogin';
 import { redirectByRole } from '../../../utils/redirectByRole';
+import { toast } from 'react-toastify';
+
 const Register = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const { createUser, updateUserProfile } = useAuth();
   const axiosSecure = useAxios();
   const [profilePic, setProfilePic] = useState('');
@@ -19,6 +21,8 @@ const Register = () => {
   // 🔼 Handle image upload to imgbb
   const handleImageUpload = async (e) => {
     const image = e.target.files[0];
+    if (!image) return;
+
     const formData = new FormData();
     formData.append('image', image);
 
@@ -27,51 +31,54 @@ const Register = () => {
     try {
       setUploading(true);
       const res = await axios.post(uploadUrl, formData);
-      setProfilePic(res.data.data.url);
-      console.log('✅ Image uploaded:', res.data.data.url);
+      const imageUrl = res.data.data.url;
+      setProfilePic(imageUrl);
+      toast.success('Image uploaded successfully');
     } catch (err) {
       console.error('❌ Image upload failed:', err);
-      alert('Image upload failed. Please try again.');
+      toast.error('Image upload failed. Try again.');
     } finally {
       setUploading(false);
     }
   };
 
   // 🧾 Submit registration form
- const onSubmit = async (data) => {
-  try {
-    const result = await createUser(data.email.trim(), data.password);
-    const user = result.user;
+  const onSubmit = async (data) => {
+    const email = data.email.trim();
 
-    await updateUserProfile({
-      displayName: data.name,
-      photoURL: profilePic || ''
-    });
+    try {
+      const result = await createUser(email, data.password);
+      const user = result.user;
 
-    const userInfo = {
-      email: data.email.trim(),
-      name: data.name,
-      photoURL: profilePic || '',
-      role: 'user',
-      created_at: new Date().toISOString(),
-      last_log_in: new Date().toISOString()
-    };
+      await updateUserProfile({
+        displayName: data.name,
+        photoURL: profilePic || ''
+      });
 
-    await axiosSecure.post('/users', userInfo);
+      const userInfo = {
+        email,
+        name: data.name,
+        photoURL: profilePic || '',
+        role: 'user',
+        created_at: new Date().toISOString(),
+        last_log_in: new Date().toISOString()
+      };
 
-    // ✅ Redirect based on role
-    await redirectByRole(user.email, axiosSecure, navigate);
+      await axiosSecure.post('/users', userInfo);
 
-  } catch (err) {
-    if (err.code === 'auth/email-already-in-use') {
-      alert('This email is already registered. Please log in.');
-      navigate('/auth/login');
-    } else {
-      console.error('❌ Registration failed:', err);
-      alert('Something went wrong. Please try again later.');
+      toast.success('Account created successfully!');
+      await redirectByRole(user.email, axiosSecure, navigate);
+
+    } catch (err) {
+      if (err.code === 'auth/email-already-in-use') {
+        toast.warn('Email already registered. Redirecting to login...');
+        setTimeout(() => navigate('/auth/login'), 2000);
+      } else {
+        console.error('❌ Registration failed:', err);
+        toast.error('Something went wrong. Try again later.');
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shadow-2xl mx-auto mt-10">
@@ -135,9 +142,9 @@ const Register = () => {
             <button
               type="submit"
               className="btn btn-primary w-full mt-4"
-              disabled={uploading}
+              disabled={uploading || isSubmitting}
             >
-              {uploading ? 'Please wait...' : 'Register'}
+              {uploading || isSubmitting ? 'Please wait...' : 'Register'}
             </button>
           </fieldset>
         </form>

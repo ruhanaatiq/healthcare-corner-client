@@ -21,7 +21,7 @@ const SellerMedicines = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Manage Medicines</h2>
+        <h2 className="text-2xl font-semibold text-red-800">Manage Medicines</h2>
         <button
           onClick={() => setShowModal(true)}
           className="bg-red-800 text-white px-4 py-2 rounded hover:bg-red-700"

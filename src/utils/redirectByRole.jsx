@@ -1,16 +1,15 @@
 export const redirectByRole = async (email, axios, navigate) => {
   try {
-    const res = await axios.get(`/users/role/${email}`);
+    const res = await axios.get(`/api/users/role/${email}`);
     const role = res.data?.role;
-
-    console.log('Redirecting role:', role); // ✅ moved inside try block
+    console.log("Redirecting role:", role);
 
     if (role === 'admin') {
-      navigate('/admin', { replace: true });
+      navigate('/dashboard/admin', { replace: true });
     } else if (role === 'seller') {
-      navigate('/seller-dashboard', { replace: true });
+      navigate('/dashboard/seller', { replace: true });
     } else {
-      navigate('/dashboard', { replace: true }); // simplified user route
+      navigate('/dashboard', { replace: true });
     }
   } catch (err) {
     console.error('Failed to redirect based on role:', err);

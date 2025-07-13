@@ -25,7 +25,7 @@ const AdminUsers = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Manage Users & Roles</h2>
+      <h2 className="text-2xl font-bold mb-4 text-red-700">Manage Users & Roles</h2>
 
       {isLoading ? (
         <p>Loading...</p>
@@ -42,9 +42,9 @@ const AdminUsers = () => {
           <tbody>
             {users.map(user => (
               <tr key={user._id}>
-                <td className="p-2 border">{user.name}</td>
-                <td className="p-2 border">{user.email}</td>
-                <td className="p-2 border capitalize">{user.role}</td>
+                <td className="p-2 border text-red-500">{user.name}</td>
+                <td className="p-2 border text-red-500">{user.email}</td>
+                <td className="p-2 border capitalize text-red-500">{user.role}</td>
                 <td className="p-2 border">
                   <select
                     value={user.role}

@@ -17,11 +17,11 @@ const PaymentHistory = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Payment History</h2>
+      <h2 className="text-2xl font-bold mb-4 text-red-800">Payment History</h2>
       <div className="overflow-x-auto">
-        <table className="table">
+        <table className="table ">
           <thead>
-            <tr>
+            <tr className='text-red-700'>
               <th>Buyer</th>
               <th>Medicine</th>
               <th>Amount</th>

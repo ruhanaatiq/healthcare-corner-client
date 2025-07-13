@@ -62,7 +62,7 @@ const AdvertisementRequests = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Ask for Advertisement</h2>
+      <h2 className="text-2xl font-bold mb-4 text-red-700">Ask for Advertisement</h2>
 
       <form onSubmit={handleSubmit} className="space-y-3 mb-6">
         <input type="file" onChange={handleImageUpload} className="file-input w-full" />

@@ -2,15 +2,72 @@ import { Outlet, NavLink } from 'react-router-dom';
 
 const AdminDashboardLayout = () => {
   return (
-    <div className="flex">
-      <aside className="w-64 h-screen bg-red-600 p-4">
-        <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-        <ul>
-          <li><NavLink to="users" className="block mb-2">Manage Users</NavLink></li>
-          <li><NavLink to="orders" className="block">Manage Orders</NavLink></li>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-red-600 p-6 text-white">
+        <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>
+        <ul className="space-y-4">
+          <li>
+            <NavLink
+              to="/"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="users"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Manage Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="orders"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Manage Orders
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="categories"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Manage Categories
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="payments"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Manage Payments
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="banner-management"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Banner Management
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="sales-report"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Sales Report
+            </NavLink>
+          </li>
         </ul>
       </aside>
-      <main className="flex-1 p-6">
+
+      {/* Main Content */}
+      <main className="flex-1 p-8 bg-gray-50 min-h-screen">
         <Outlet />
       </main>
     </div>

@@ -40,7 +40,7 @@ const DiscountProducts = ({ products = [] }) => {  // Default to an empty array 
                 alt={product.name || 'Product Image'} // Add alt text for better accessibility
                 className="w-full h-32 object-cover rounded-md"
               />
-              <h3 className="text-xl font-bold mt-2">{product.name}</h3>
+              <h3 className="text-xl text-red-600 font-bold mt-2">{product.name}</h3>
               <p className="text-sm text-gray-600">
                 Price: <span className="line-through">${product.price}</span> ${product.discountedPrice || product.price}
               </p>

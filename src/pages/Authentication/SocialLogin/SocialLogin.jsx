@@ -3,6 +3,7 @@ import useAuth from '../../../hooks/useAuth';
 import useAxios from '../../../hooks/useAxiosSecure';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { redirectByRole } from '../../../utils/redirectByRole';
+import { toast } from 'react-toastify';
 
 const SocialLogin = () => {
   const { signInWithGoogle } = useAuth();
@@ -24,21 +25,24 @@ const SocialLogin = () => {
         last_log_in: new Date().toISOString(),
       };
 
-      // ✅ Save or update user info in DB
       await axios.post('/api/users', userInfo);
-
-      // ✅ Redirect based on user role
+      toast.success('Logged in successfully!');
       await redirectByRole(user.email, axios, navigate);
-
     } catch (error) {
       console.error('Google Sign-In Error:', error);
+      toast.error('Google sign-in failed. Please try again.');
     }
   };
 
   return (
-    <div className='text-center'>
-      <p className='mb-4'>OR</p>
-      <button onClick={handleGoogleSignIn} className="btn bg-white text-black border-[#e5e5e5]">
+    <div className="text-center">
+      <p className="mb-4">OR</p>
+      <button
+        type="button"
+        aria-label="Login with Google"
+        onClick={handleGoogleSignIn}
+        className="btn bg-white text-black border-[#e5e5e5]"
+      >
         <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <g>
             <path d="m0 0H512V512H0" fill="#fff" />
@@ -48,7 +52,7 @@ const SocialLogin = () => {
             <path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55" />
           </g>
         </svg>
-        Login with Google
+        <span className="ml-2">Login with Google</span>
       </button>
     </div>
   );

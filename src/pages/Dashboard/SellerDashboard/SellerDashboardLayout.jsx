@@ -7,26 +7,40 @@ const SellerDashboardLayout = () => {
       <aside className="w-full md:w-64 bg-red-800 text-white p-5 space-y-4">
         <h2 className="text-2xl font-bold mb-6">Seller Panel</h2>
         <nav className="flex flex-col space-y-2">
+           <li>
+            <NavLink
+              to="/"
+              className="block hover:text-blue-200 transition duration-200"
+            >
+              Home
+            </NavLink>
+          </li>
           <NavLink
-            to="/seller-dashboard/medicines"
+            to="medicines"
             className={({ isActive }) =>
-              isActive ? 'bg-white text-red-800 px-4 py-2 rounded' : 'hover:bg-red-700 px-4 py-2 rounded'
+              isActive
+                ? 'bg-white text-red-800 font-semibold px-4 py-2 rounded'
+                : 'hover:bg-red-700 px-4 py-2 rounded transition'
             }
           >
             Manage Medicines
           </NavLink>
           <NavLink
-            to="/seller-dashboard/payments"
+            to="payments"
             className={({ isActive }) =>
-              isActive ? 'bg-white text-red-800 px-4 py-2 rounded' : 'hover:bg-red-700 px-4 py-2 rounded'
+              isActive
+                ? 'bg-white text-red-800 font-semibold px-4 py-2 rounded'
+                : 'hover:bg-red-700 px-4 py-2 rounded transition'
             }
           >
             Payment History
           </NavLink>
           <NavLink
-            to="/seller-dashboard/ads"
+            to="ads"
             className={({ isActive }) =>
-              isActive ? 'bg-white text-red-800 px-4 py-2 rounded' : 'hover:bg-red-700 px-4 py-2 rounded'
+              isActive
+                ? 'bg-white text-red-800 font-semibold px-4 py-2 rounded'
+                : 'hover:bg-red-700 px-4 py-2 rounded transition'
             }
           >
             Advertisement Requests
@@ -35,7 +49,7 @@ const SellerDashboardLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-50 min-h-screen">
+      <main className="flex-1 p-6 bg-gray-50">
         <Outlet />
       </main>
     </div>

@@ -4,7 +4,7 @@ import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const axiosSecure = axios.create({
-  baseURL: `http://localhost:5000`,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000', // ✅ Use env for deployment
 });
 
 const useAxiosSecure = () => {
@@ -14,7 +14,6 @@ const useAxiosSecure = () => {
   useEffect(() => {
     if (!user?.accessToken) return;
 
-    // Set up request interceptor
     const requestInterceptor = axiosSecure.interceptors.request.use(
       config => {
         config.headers.Authorization = `Bearer ${user.accessToken}`;
@@ -23,28 +22,29 @@ const useAxiosSecure = () => {
       error => Promise.reject(error)
     );
 
-    // Set up response interceptor
     const responseInterceptor = axiosSecure.interceptors.response.use(
-      res => res,
+      response => response,
       error => {
         const status = error.response?.status;
+
         if (status === 403) {
-          navigate('/forbidden');
+          navigate('/forbidden', { replace: true });
         } else if (status === 401) {
           logOut()
-            .then(() => navigate('/auth/login'))
+            .then(() => navigate('/auth/login', { replace: true }))
             .catch(() => {});
         }
+
         return Promise.reject(error);
       }
     );
 
-    // Cleanup on unmount or when user changes
+    // ✅ Clean up interceptors when user changes or component unmounts
     return () => {
       axiosSecure.interceptors.request.eject(requestInterceptor);
       axiosSecure.interceptors.response.eject(responseInterceptor);
     };
-  }, [user, logOut, navigate]);
+  }, [user?.accessToken, logOut, navigate]);
 
   return axiosSecure;
 };

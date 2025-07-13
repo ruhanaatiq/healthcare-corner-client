@@ -1,94 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useAxios from '../../../hooks/useAxios';
-import MedicineModal from './MedicineModal';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const CategoryDetails = () => {
-  const { categoryId } = useParams();
-  const axios = useAxios(); // ✅ use your axios instance here
-  const [medicines, setMedicines] = useState([]);
-  const [selectedMedicine, setSelectedMedicine] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // Fetch medicines based on category
-  useEffect(() => {
-    const fetchMedicines = async () => {
-      try {
-        const response = await axios.get(`/api/medicines/category/${categoryId}`);
-        console.log("Fetched medicines:", response.data); // Optional debug
-        setMedicines(response.data);
-      } catch (error) {
-        console.error("Error fetching medicines:", error);
-      }
-    };
-
-    fetchMedicines();
-  }, [axios, categoryId]);
-
-  const handleAddToCart = (medicine) => {
-    console.log('Medicine added to cart:', medicine);
-    // Implement your add to cart logic here
-  };
-
-  const handleViewMedicine = (medicine) => {
-    setSelectedMedicine(medicine);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedMedicine(null);
-  };
+const CategoryCard = ({ category }) => {
+  if (!category || !category.categoryName || !category._id) {
+    console.log("Invalid category:", category); // for debugging
+    return (
+      <div className="card w-64 bg-gray-100 p-4 m-2 shadow-lg rounded-lg">
+        Category data is unavailable
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Medicines in Category</h2>
-
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Medicine Image</th>
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Price</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {medicines.length > 0 ? (
-            medicines.map(medicine => (
-              <tr key={medicine._id}>
-                <td className="border px-4 py-2">
-                  <img src={medicine.imageUrl} alt={medicine.name} className="w-16 h-16 object-cover" />
-                </td>
-                <td className="border px-4 py-2">{medicine.name}</td>
-                <td className="border px-4 py-2">${medicine.price}</td>
-                <td className="border px-4 py-2">
-                  <button 
-                    className="mr-2 text-blue-500"
-                    onClick={() => handleViewMedicine(medicine)}
-                  >
-                    View
-                  </button>
-                  <button 
-                    className="text-green-500"
-                    onClick={() => handleAddToCart(medicine)}
-                  >
-                    Add to Cart
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center text-gray-500">No medicines available in this category.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      {modalOpen && <MedicineModal medicine={selectedMedicine} closeModal={closeModal} />}
+    <div className="card w-64 bg-gray-100 p-4 m-2 shadow-lg rounded-lg">
+      <img 
+        src={category.categoryImage || 'https://via.placeholder.com/150'} 
+        alt={category.categoryName} 
+        className="w-full h-32 object-cover rounded-md" 
+      />
+      <h3 className="text-xl font-bold mt-2 text-red-600">{category.categoryName}</h3>
+      <p className="text-sm text-gray-600">Medicines: {category.medicineCount || 0}</p>
+      <Link to={`/category/${category._id}`} className="mt-4 text-blue-500 hover:text-blue-700 inline-block">
+        View Medicines
+      </Link>
     </div>
   );
 };
 
-export default CategoryDetails;
+export default CategoryCard;
