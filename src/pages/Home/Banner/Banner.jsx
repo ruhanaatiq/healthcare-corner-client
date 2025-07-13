@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAxios from '../../../hooks/useAxios';
 
 const Banner = () => {
@@ -10,17 +10,11 @@ const Banner = () => {
   useEffect(() => {
     const fetchBannerMedicines = async () => {
       try {
-        const response = await axios.get('/api/medicines');
-        console.log("Response from backend:", response.data);
-
-        if (Array.isArray(response.data)) {
-          const bannerMedicines = response.data.filter(m => m.isBanner);
-          setBannerMedicines(bannerMedicines);
-        } else {
-          console.error("Expected array, got:", typeof response.data, response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching banner medicines:", error);
+        const res = await axios.get('/api/medicines');
+        const filtered = res.data?.filter(med => med.isBanner === true);
+        setBannerMedicines(filtered);
+      } catch (err) {
+        console.error('Error fetching banner medicines:', err);
         setError('Failed to fetch banner medicines');
       } finally {
         setLoading(false);
@@ -30,27 +24,49 @@ const Banner = () => {
     fetchBannerMedicines();
   }, [axios]);
 
-  if (loading) return <div className="text-center text-white p-4">Loading banner medicines...</div>;
-  if (error) return <div className="text-center text-white p-4">{error}</div>;
+  if (loading) return <div className="text-center p-4">Loading banner...</div>;
+  if (error) return <div className="text-center text-red-600">{error}</div>;
 
   return (
-    <div className="carousel w-full z-10 relative">
+    <div className="carousel w-full h-64 rounded-lg overflow-hidden">
       {bannerMedicines.length > 0 ? (
-        bannerMedicines.map(medicine => (
-          <div key={medicine._id} className="carousel-item w-full relative">
-            <img 
-              src={medicine.imageUrl || 'https://via.placeholder.com/150'} 
-              alt={medicine.name} 
-              className="w-full h-60 object-cover"
+        bannerMedicines.map((medicine, index) => (
+          <div
+            key={medicine._id}
+            id={`slide${index}`}
+            className="carousel-item relative w-full"
+          >
+            <img
+              src={medicine.imageUrl || 'https://via.placeholder.com/800x300'}
+              alt={medicine.name}
+              className="w-full h-64 object-cover"
             />
-            <div className="carousel-caption absolute bottom-0 left-0 w-full p-4 bg-opacity-50 bg-black text-white">
+            <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white p-4">
               <h2 className="text-xl font-bold">{medicine.name}</h2>
-              <p>{medicine.description}</p>
+              <p className="text-sm">{medicine.description}</p>
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-4 right-4 top-1/2">
+              <a
+                href={`#slide${(index - 1 + bannerMedicines.length) % bannerMedicines.length}`}
+                className="btn btn-circle btn-sm"
+              >
+                ❮
+              </a>
+              <a
+                href={`#slide${(index + 1) % bannerMedicines.length}`}
+                className="btn btn-circle btn-sm"
+              >
+                ❯
+              </a>
             </div>
           </div>
         ))
       ) : (
-        <div className="text-center text-white p-4">No medicines in the banner.</div>
+        <div className="text-center text-gray-600 w-full h-64 flex items-center justify-center">
+          No banner medicines available
+        </div>
       )}
     </div>
   );

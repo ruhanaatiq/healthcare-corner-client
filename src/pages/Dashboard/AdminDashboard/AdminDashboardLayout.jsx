@@ -23,14 +23,7 @@ const AdminDashboardLayout = () => {
               Manage Users
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="orders"
-              className="block hover:text-blue-200 transition duration-200"
-            >
-              Manage Orders
-            </NavLink>
-          </li>
+          
           <li>
             <NavLink
               to="categories"

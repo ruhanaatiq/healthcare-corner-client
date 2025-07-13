@@ -17,24 +17,24 @@ import Forbidden from "../pages/Forbidden/Forbidden";
 
 import DashboardLayout from "../pages/Dashboard/DashboardLayout";
 
-// 🧑‍⚕️ Admin Pages
+// Admin Pages
 import AdminDashboardLayout from "../pages/Dashboard/AdminDashboard/AdminDashboardLayout";
 import AdminUsers from "../pages/Dashboard/AdminDashboard/AdminUsers";
-import AdminOrders from "../pages/Dashboard/AdminDashboard/AdminOrders";
 import AdminCategories from "../pages/Dashboard/AdminDashboard/AdminCategories";
 import AdminPayments from "../pages/Dashboard/AdminDashboard/AdminPayments";
 import AdminSalesReport from "../pages/Dashboard/AdminDashboard/AdminSalesReport";
 import AdminBannerManagement from "../pages/Dashboard/AdminDashboard/AdminBannerManagement";
 
-// 🛒 Seller Pages
+// Seller Pages
 import SellerDashboardLayout from "../pages/Dashboard/SellerDashboard/SellerDashboardLayout";
 import SellerMedicines from "../pages/Dashboard/SellerDashboard/SellerMedicines";
 import PaymentHistory from "../pages/Dashboard/SellerDashboard/PaymentHistory";
 import AdvertisementRequests from "../pages/Dashboard/SellerDashboard/AdvertisementRequests";
 
-// 👤 User Pages
+// User Pages
 import UserDashboardLayout from "../pages/Dashboard/UserDashboard/UserDashboardLayout";
 import UserPaymentHistory from "../pages/Dashboard/UserDashboard/UserPaymentHistory";
+import UpdateProfile from"../pages/Home/Profile/UpdateProfile";
 
 export const router = createBrowserRouter([
   {
@@ -64,45 +64,46 @@ export const router = createBrowserRouter([
       }
     ]
   },
-
-  // Dashboard Route
   {
-    path: '/dashboard',
-    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+    path: "/dashboard",
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute> },
+  // User Dashboard
+  {
+    path: '/dashboard/user',
+    element: <PrivateRoute><UserDashboardLayout /></PrivateRoute>,
+    children: [
+      { path: 'payment-history', element: <UserPaymentHistory /> },
+      { path: 'update-profile', element: <UpdateProfile/> }
+    ]
   },
-      // Admin Routes (inside dashboard/admin)
-      {
-        path: '/dashboard/admin',
-        element: <AdminRoute><AdminDashboardLayout /></AdminRoute>,
-        children: [
-          { path: 'users', element: <AdminUsers /> },
-          { path: 'orders', element: <AdminOrders /> },
-          { path: 'categories', element: <AdminCategories /> },
-          { path: 'payments', element: <AdminPayments /> },
-          { path: 'sales-report', element: <AdminSalesReport /> },
-          { path: 'banner-management', element: <AdminBannerManagement /> }
-        ]
-      },
 
-      // Seller Routes (inside dashboard/seller)
-      {
-        path: '/dashboard/seller',
-        element: <SellerRoute><SellerDashboardLayout /></SellerRoute>,
-        children: [
-          { path: 'medicines', element: <SellerMedicines /> },
-          { path: 'payments', element: <PaymentHistory /> },
-          { path: 'ads', element: <AdvertisementRequests /> }
-        ]
-      },
+  // Admin Dashboard
+  {
+    path: '/dashboard/admin',
+    element: <AdminRoute><AdminDashboardLayout /></AdminRoute>,
+    children: [
+      { path: 'users', element: <AdminUsers /> },
+      { path: 'categories', element: <AdminCategories /> },
+      { path: 'payments', element: <AdminPayments /> },
+      { path: 'sales-report', element: <AdminSalesReport /> },
+      { path: 'banner-management', element: <AdminBannerManagement /> }
+    ]
+  },
 
-      // User Routes (default dashboard/*)
-    {
-  path: '/dashboard/payment-history',
-  element: <PrivateRoute><UserDashboardLayout /></PrivateRoute>
-},
-    
-  
+  // Seller Dashboard
+  {
+    path: '/dashboard/seller',
+    element: <SellerRoute><SellerDashboardLayout /></SellerRoute>,
+    children: [
+      { path: 'medicines', element: <SellerMedicines /> },
+      { path: 'payments', element: <PaymentHistory /> },
+      { path: 'ads', element: <AdvertisementRequests /> },
+            { path: 'update-profile', element: <UpdateProfile/> },
 
+    ]
+  },
+
+  // Fallback
   {
     path: 'forbidden',
     element: <Forbidden />

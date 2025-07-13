@@ -46,7 +46,7 @@ const navigate = useNavigate();
               {/* Dropdown Menu for Profile */}
               {isDropdownOpen && (
                 <div className="absolute right-0 bg-white shadow-lg rounded-lg w-48 mt-2">
-                  <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Update Profile</Link>
+                  <Link to="/dashboard/update-profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Update Profile</Link>
                   <Link to="/dashboard" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</Link>
                   <button
   onClick={async () => {

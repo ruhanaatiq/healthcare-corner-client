@@ -20,9 +20,12 @@ const CategoryCard = ({ category }) => {
       />
       <h3 className="text-xl font-bold mt-2 text-red-600">{category.categoryName}</h3>
       <p className="text-sm text-gray-600">Medicines: {category.medicineCount || 0}</p>
-      <Link to={`/category/${category._id}`} className="mt-4 text-blue-500 hover:text-blue-700 inline-block">
-        View Medicines
-      </Link>
+     <Link
+  to={`/shop?category=${encodeURIComponent(category.categoryName)}`}
+  className="mt-4 text-blue-500 hover:text-blue-700 inline-block"
+>
+  View Medicines
+</Link>
     </div>
   );
 };

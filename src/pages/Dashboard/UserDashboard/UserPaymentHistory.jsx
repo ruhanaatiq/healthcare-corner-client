@@ -29,7 +29,7 @@ const UserPaymentHistory = () => {
       ) : (
         <div className="space-y-4">
           {payments.map((payment, idx) => (
-            <div key={idx} className="border p-4 rounded shadow bg-white">
+            <div key={idx} className="border p-4 rounded shadow bg-white text-red-700">
               <p><strong>Total:</strong> ${payment.total}</p>
               <p><strong>Status:</strong> {payment.status}</p>
               <p><strong>Date:</strong> {new Date(payment.createdAt).toLocaleString()}</p>

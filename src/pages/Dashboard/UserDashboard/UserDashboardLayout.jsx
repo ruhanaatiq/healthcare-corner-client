@@ -15,10 +15,10 @@ const UserDashboardLayout = () => {
           <NavLink to="/" className="flex items-center gap-2 hover:text-blue-600">
             <FaHome /> Home
           </NavLink>
-          <NavLink to="/dashboard/payment-history" className="flex items-center gap-2 hover:text-blue-600">
+          <NavLink to="payment-history" className="flex items-center gap-2 hover:text-blue-600">
             <FaMoneyCheckAlt /> Payment History
           </NavLink>
-          <NavLink to="/dashboard/profile" className="flex items-center gap-2 hover:text-blue-600">
+          <NavLink to="update-profile" className="flex items-center gap-2 hover:text-blue-600">
             <FaUser /> My Profile
           </NavLink>
         </div>

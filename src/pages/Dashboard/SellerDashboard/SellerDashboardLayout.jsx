@@ -7,7 +7,7 @@ const SellerDashboardLayout = () => {
       <aside className="w-full md:w-64 bg-red-800 text-white p-5 space-y-4">
         <h2 className="text-2xl font-bold mb-6">Seller Panel</h2>
         <nav className="flex flex-col space-y-2">
-           <li>
+          <li>
             <NavLink
               to="/"
               className="block hover:text-blue-200 transition duration-200"
@@ -15,6 +15,7 @@ const SellerDashboardLayout = () => {
               Home
             </NavLink>
           </li>
+          
           <NavLink
             to="medicines"
             className={({ isActive }) =>
@@ -25,6 +26,7 @@ const SellerDashboardLayout = () => {
           >
             Manage Medicines
           </NavLink>
+
           <NavLink
             to="payments"
             className={({ isActive }) =>
@@ -35,6 +37,7 @@ const SellerDashboardLayout = () => {
           >
             Payment History
           </NavLink>
+
           <NavLink
             to="ads"
             className={({ isActive }) =>
@@ -44,6 +47,18 @@ const SellerDashboardLayout = () => {
             }
           >
             Advertisement Requests
+          </NavLink>
+
+          {/* ✅ New Update Profile Link */}
+          <NavLink
+            to="/dashboard/update-profile"
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-white text-red-800 font-semibold px-4 py-2 rounded'
+                : 'hover:bg-red-700 px-4 py-2 rounded transition'
+            }
+          >
+            Update Profile
           </NavLink>
         </nav>
       </aside>

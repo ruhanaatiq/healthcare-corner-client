@@ -1,10 +1,6 @@
-
 import { useEffect } from "react";
 import useRole from '../../hooks/useRole';
 import { useNavigate } from "react-router-dom";
-import AdminDashboardLayout from './AdminDashboard/AdminDashboardLayout';
-import SellerDashboardLayout from './SellerDashboard/SellerDashboardLayout';
-import UserDashboardLayout from './UserDashboard/UserDashboardLayout';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -17,12 +13,13 @@ const DashboardLayout = () => {
       } else if (role === 'seller') {
         navigate('/dashboard/seller', { replace: true });
       } else {
-        navigate('/dashboard/payment-history', { replace: true });
+        navigate('/dashboard/user/payment-history', { replace: true }); // ✅ Corrected
       }
     }
   }, [role, loading, navigate]);
 
+  if (loading) return <div className="text-center mt-10">Loading Dashboard...</div>;
 
-  return null; // Or a fallback screen while redirecting
+  return null;
 };
 export default DashboardLayout;

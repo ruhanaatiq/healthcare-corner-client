@@ -21,7 +21,7 @@ const PaymentHistory = () => {
       <div className="overflow-x-auto">
         <table className="table ">
           <thead>
-            <tr className='text-red-700'>
+            <tr className='text-red-700 bg-amber-100'>
               <th>Buyer</th>
               <th>Medicine</th>
               <th>Amount</th>
@@ -32,11 +32,11 @@ const PaymentHistory = () => {
           <tbody>
             {payments.map(payment => (
               <tr key={payment._id}>
-                <td>{payment.buyerEmail}</td>
-                <td>{payment.medicineName}</td>
-                <td>${payment.amount}</td>
-                <td>{payment.status}</td>
-                <td>{new Date(payment.createdAt).toLocaleDateString()}</td>
+                <td className='text-red-600'>{payment.buyerEmail}</td>
+                <td className='text-red-600'>{payment.medicineName}</td>
+                <td className='text-red-600'>${payment.amount}</td>
+                <td className='text-red-600'>{payment.status}</td>
+                <td className='text-red-600'>{new Date(payment.createdAt).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
