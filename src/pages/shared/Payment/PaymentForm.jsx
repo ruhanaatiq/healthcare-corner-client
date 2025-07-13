@@ -1,78 +1,88 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import { CartContext } from '../../../contexts/CartContext';
+import React, { useEffect, useState } from 'react';
+import {
+  CardElement,
+  useElements,
+  useStripe
+} from '@stripe/react-stripe-js';
+import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
-  const { cart, dispatch } = useContext(CartContext);
   const { user } = useAuth();
 
   const [clientSecret, setClientSecret] = useState('');
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const [processing, setProcessing] = useState(false);
+  const [amount] = useState(100); // Replace with dynamic total from cart
 
-  // Create PaymentIntent mutation
-  const createPaymentIntent = useMutation({
-    mutationFn: (amount) =>
-      axiosSecure.post('/api/create-payment-intent', { amount }).then(res => res.data),
-    onSuccess: (data) => {
-      setClientSecret(data.clientSecret);
-    },
-  });
-
+  // 1. Create payment intent
   useEffect(() => {
-    if (total > 0) {
-      createPaymentIntent.mutate(total);
-    }
-  }, [total]);
+    axios.post(`${import.meta.env.VITE_API_URL}/api/create-payment-intent`, { amount })
+      .then(res => setClientSecret(res.data.clientSecret))
+      .catch(err => toast.error('Failed to initiate payment.'));
+  }, [amount]);
 
-  // Handle payment form submission
+  // 2. Handle payment submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements || !clientSecret) return;
 
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card: elements.getElement(CardElement) }
+    setProcessing(true);
+
+    const card = elements.getElement(CardElement);
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card,
     });
 
     if (error) {
-      console.error(error);
-    } else {
-      // Save the order to the backend
+      toast.error(error.message);
+      setProcessing(false);
+      return;
+    }
+
+    const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: paymentMethod.id,
+    });
+
+    if (confirmError) {
+      toast.error(confirmError.message);
+      setProcessing(false);
+      return;
+    }
+
+    if (paymentIntent.status === 'succeeded') {
+      // 3. Save order info to DB
       const order = {
-        userName: user?.displayName || 'Anonymous',
-        userEmail: user?.email,
-        items: cart,
-        total,
-        paymentId: paymentIntent.id,
-        status: 'pending', // Default status
-        createdAt: new Date().toISOString(),
+        userEmail: user.email,
+        amount,
+        items: [], // Optional: Add actual cart items
+        status: 'pending',
+        transactionId: paymentIntent.id,
       };
 
       try {
-        const res = await axiosSecure.post('/api/orders', order);
-        dispatch({ type: 'CLEAR' });
-navigate(`/invoice/${res.data.insertedId}`, { state: { order } });      } catch (err) {
-        console.error('Order saving failed:', err);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, order);
+        toast.success('Payment successful and order saved!');
+      } catch (err) {
+        toast.error('Payment succeeded, but failed to save order.');
       }
+
+      setProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement className="p-2 border rounded" />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <CardElement className="p-4 border rounded-md" />
       <button
         type="submit"
-        disabled={!stripe || !clientSecret}
-        className="btn btn-primary mt-4"
+        disabled={!stripe || processing}
+        className="btn btn-primary"
       >
-        Pay ${total.toFixed(2)}
+        {processing ? 'Processing...' : 'Pay Now'}
       </button>
     </form>
   );

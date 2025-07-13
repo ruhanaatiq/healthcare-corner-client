@@ -58,7 +58,7 @@ const AdminSalesReport = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Sales Report</h2>
+      <h2 className="text-xl font-bold mb-4 text-red-800">Sales Report</h2>
 
       {/* Filter Section */}
       <div className="flex gap-4 items-center mb-4 flex-wrap">
@@ -100,7 +100,7 @@ const AdminSalesReport = () => {
       <div className="overflow-x-auto">
         <table className="table">
           <thead>
-            <tr>
+            <tr className='text-red-800'>
               <th>#</th>
               <th>Medicine</th>
               <th>Seller</th>

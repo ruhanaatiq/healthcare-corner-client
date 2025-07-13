@@ -1,10 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosSecure from '../../../hooks/useAxiosSecure';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import toast from 'react-hot-toast';
 
 const AdminPayments = () => {
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const { data: payments = [] } = useQuery({
+  const { data: payments = [], isLoading, isError } = useQuery({
     queryKey: ['payments'],
     queryFn: async () => {
       const res = await axiosSecure.get('/api/payments');
@@ -15,15 +17,22 @@ const AdminPayments = () => {
   const approvePayment = useMutation({
     mutationFn: (id) => axiosSecure.patch(`/api/payments/${id}`),
     onSuccess: () => {
+      toast.success('Payment approved!');
       queryClient.invalidateQueries(['payments']);
+    },
+    onError: () => {
+      toast.error('Failed to approve payment.');
     }
   });
 
+  if (isLoading) return <p>Loading payments...</p>;
+  if (isError) return <p>Error fetching payments.</p>;
+
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Manage Payments</h2>
+      <h2 className="text-xl font-bold mb-4 text-red-800">Manage Payments</h2>
       <table className="table">
-        <thead>
+        <thead className='text-red-800'>
           <tr>
             <th>User</th>
             <th>Total</th>
@@ -34,9 +43,13 @@ const AdminPayments = () => {
         <tbody>
           {payments.map(payment => (
             <tr key={payment._id}>
-              <td>{payment.userName}</td>
-              <td>${payment.total.toFixed(2)}</td>
-              <td>{payment.status}</td>
+              <td className='text-red-800'>{payment.userName}</td>
+              <td className='text-red-800'> ${payment.total?.toFixed(2)}</td>
+              <td>
+                <span className={`badge ${payment.status === 'paid' ? 'badge-success' : 'badge-warning'}`}>
+                  {payment.status}
+                </span>
+              </td>
               <td>
                 {payment.status === 'pending' && (
                   <button

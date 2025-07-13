@@ -30,7 +30,7 @@ const toggleBannerStatus = async (id, currentStatus) => {
 };
   return (
     <div className="overflow-x-auto">
-      <h1 className="text-2xl font-bold mb-4">Advertise Banner Management</h1>
+      <h1 className="text-2xl font-bold mb-4 text-red-800">Advertise Banner Management</h1>
       <table className="table w-full bg-white shadow rounded">
         <thead>
           <tr className="bg-gray-100 text-red-500">
