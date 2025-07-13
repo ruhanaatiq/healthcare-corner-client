@@ -4,7 +4,7 @@ import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000', // ✅ Use env for deployment
+  baseURL: import.meta.env.VITE_API_URL || 'https://b11a12-server-side-ruhanaatiq.vercel.app', 
 });
 
 const useAxiosSecure = () => {
