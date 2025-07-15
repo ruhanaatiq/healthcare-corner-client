@@ -3,6 +3,7 @@ import Banner from './Banner/Banner';
 import CategoryCardContainer from './Category/CategoryCardContainer'; // assuming this renders multiple cards
 import DiscountProducts from './DiscountProducts/DiscountProducts';
 import useAxios from '../../hooks/useAxios'; // adjust path as needed
+import FeaturedHealthTips from './FeaturedHealthtips';
 
 const Home = () => {
   const axios = useAxios();
@@ -22,6 +23,7 @@ const Home = () => {
       <Banner />
       <CategoryCardContainer />
       <DiscountProducts products={medicines} /> {/* ✅ now products is passed */}
+      <FeaturedHealthTips></FeaturedHealthTips>
     </div>
   );
 };
