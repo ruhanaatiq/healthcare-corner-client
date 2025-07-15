@@ -18,6 +18,10 @@ function App() {
       duration: 1000, // Optional: animation duration in ms
       once: true,     // Optional: animation happens only once
     });
+
+    return () => {
+      AOS.refresh(); 
+    };
   }, []);
 
   return (

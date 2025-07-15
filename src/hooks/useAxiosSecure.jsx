@@ -2,9 +2,10 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; // Optional: For displaying error messages
 
 const axiosSecure = axios.create({
-  baseURL: ` https://b11a12-server-side-ruhanaatiq.vercel.app/api`
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 const useAxiosSecure = () => {
@@ -28,18 +29,27 @@ const useAxiosSecure = () => {
         const status = error.response?.status;
 
         if (status === 403) {
+          // Redirect to forbidden page
           navigate('/forbidden', { replace: true });
+          toast.error('You do not have permission to access this resource');
         } else if (status === 401) {
+          // Log out and redirect to login page if unauthorized
           logOut()
             .then(() => navigate('/auth/login', { replace: true }))
-            .catch(() => {});
+            .catch(() => toast.error('Error logging out.'));
+        } else if (status === 500) {
+          // Handle server errors
+          toast.error('Server error. Please try again later.');
+        } else if (status === 400) {
+          // Handle client-side errors
+          toast.error('Bad request. Please check your input.');
         }
 
         return Promise.reject(error);
       }
     );
 
-    // ✅ Clean up interceptors when user changes or component unmounts
+    // Clean up interceptors when the component is unmounted or the user changes
     return () => {
       axiosSecure.interceptors.request.eject(requestInterceptor);
       axiosSecure.interceptors.response.eject(responseInterceptor);
