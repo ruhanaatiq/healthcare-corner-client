@@ -23,7 +23,7 @@ const UpdateProfile = () => {
       setPhotoURL(user.photoURL || '');
 
       const paymentRes = await axiosSecure.get('/api/payments');
-const userPayments = Array.isArray(paymentRes.data) ? paymentRes.data.filter(p => p.userEmail === user.email) : [];
+      const userPayments = paymentRes.data.filter(p => p.userEmail === user.email);
       setPayments(userPayments);
     }
   };
