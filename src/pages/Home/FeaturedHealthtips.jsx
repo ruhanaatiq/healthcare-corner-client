@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import title from 're-title';
 
 const tips = [
   "💧 Stay hydrated by drinking 8 glasses of water daily.",
@@ -12,13 +11,14 @@ const tips = [
 ];
 
 const FeaturedHealthTips = () => {
+  // ✅ Set page title using native API
   useEffect(() => {
-    title("Health Tips | Healthcare Corner");
+    document.title = "Health Tips | Healthcare Corner";
   }, []);
 
   return (
     <section className="bg-blue-50 py-10 px-4 rounded-lg mt-10 shadow-sm">
-      {/* Animated Title */}
+      {/* Animated Heading */}
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
