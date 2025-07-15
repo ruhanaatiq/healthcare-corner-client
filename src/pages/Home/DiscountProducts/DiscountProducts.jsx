@@ -4,7 +4,7 @@ import 'swiper/css';
 
 const DiscountProducts = ({ products = [] }) => {  // Default to an empty array if products is undefined
   // Filter the products to get only those with a discount
-  const discountedProducts = products.filter(product => product.discount > 0);
+const discountedProducts = Array.isArray(products) ? products.filter(product => product.discount > 0) : [];
 
   // Handle case where no products are available
   if (discountedProducts.length === 0) {

@@ -11,7 +11,7 @@ const Banner = () => {
     const fetchBannerMedicines = async () => {
       try {
         const res = await axios.get('/api/medicines');
-        const filtered = res.data?.filter(med => med.isBanner === true);
+const filtered = Array.isArray(res.data) ? res.data.filter(med => med.isBanner) : [];
         setBannerMedicines(filtered);
       } catch (err) {
         console.error('Error fetching banner medicines:', err);
