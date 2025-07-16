@@ -35,6 +35,7 @@ import AdvertisementRequests from "../pages/Dashboard/SellerDashboard/Advertisem
 import UserDashboardLayout from "../pages/Dashboard/UserDashboard/UserDashboardLayout";
 import UserPaymentHistory from "../pages/Dashboard/UserDashboard/UserPaymentHistory";
 import UpdateProfile from"../pages/Home/Profile/UpdateProfile";
+import ReadMoreTips from "../pages/Home/ReadMoreTips";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
       { path: 'category/:categoryId', element: <CategoryDetails /> },
       { path: 'cart', element: <CartPage /> },
       { path: 'shop', element: <Shop /> },
+       { path: 'read-more-tips', element: <ReadMoreTips/> },
       {
         path: 'checkout',
         element: <PrivateRoute><Checkout /></PrivateRoute>

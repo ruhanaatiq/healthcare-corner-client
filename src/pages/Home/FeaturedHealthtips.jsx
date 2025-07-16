@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom'; // ✅ Corrected import
 
 const tips = [
   "💧 Stay hydrated by drinking 8 glasses of water daily.",
@@ -20,7 +21,7 @@ const FeaturedHealthTips = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
-      className=" py-10 px-4 rounded-lg mt-10 shadow-md"
+      className="py-10 px-4 rounded-lg mt-10 shadow-md"
     >
       {/* Heading Animation */}
       <motion.h2
@@ -61,14 +62,15 @@ const FeaturedHealthTips = () => {
 
       {/* Button Animation */}
       <div className="text-center mt-6">
-        <motion.button
+        <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300 }}
-          className="btn btn-outline btn-primary"
         >
-          Read More Tips
-        </motion.button>
+          <Link to="/read-more-tips" className="btn btn-outline btn-primary">
+            Read More Tips
+          </Link>
+        </motion.div>
       </div>
     </motion.section>
   );
