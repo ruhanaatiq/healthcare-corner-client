@@ -67,7 +67,7 @@ const Banner = () => {
         ))
       ) : (
         <div className="text-center text-gray-600 w-full h-64 flex items-center justify-center">
-          No banner medicines available
+         Trying to load available banner medicines 
         </div>
       )}
     </div>

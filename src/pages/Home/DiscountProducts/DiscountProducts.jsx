@@ -9,7 +9,7 @@ const DiscountProducts = ({ products = [] }) => {
   const enableLoop = discountedProducts.length > 3; // Adjust based on your max slidesPerView
 
   if (discountedProducts.length === 0) {
-    return <p className="text-center text-gray-500">No discounted products available.</p>;
+    return <p className="text-center text-gray-500">Loading available discounted products.</p>;
   }
 
   return (
