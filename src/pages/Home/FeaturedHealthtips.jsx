@@ -20,7 +20,7 @@ const FeaturedHealthTips = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
-      className="bg-red-200 py-10 px-4 rounded-lg mt-10 shadow-md"
+      className=" py-10 px-4 rounded-lg mt-10 shadow-md"
     >
       {/* Heading Animation */}
       <motion.h2

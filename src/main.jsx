@@ -30,7 +30,7 @@ function App() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto bg-white">
       <Toaster position="top-right" />
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
