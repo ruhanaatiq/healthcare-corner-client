@@ -14,7 +14,7 @@ const axiosSecure = axios.create({
 });
 
 const useAxiosSecure = () => {
-  const { logOut } = useAuth(); // no need to rely on user here
+  const { logOut } = useAuth(); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const useAxiosSecure = () => {
       async (config) => {
         const user = auth.currentUser;
         if (user) {
-          const token = await user.getIdToken(); // ✅ critical
+          const token = await user.getIdToken(); 
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;

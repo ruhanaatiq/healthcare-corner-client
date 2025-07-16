@@ -4,6 +4,7 @@ import CategoryCardContainer from './Category/CategoryCardContainer'; // assumin
 import DiscountProducts from './DiscountProducts/DiscountProducts';
 import useAxios from '../../hooks/useAxios'; // adjust path as needed
 import FeaturedHealthTips from './FeaturedHealthtips';
+import WhyUs from './WhyUs';
 
 const Home = () => {
   const axios = useAxios();
@@ -24,6 +25,7 @@ const Home = () => {
       <CategoryCardContainer />
       <DiscountProducts products={medicines} /> {/* ✅ now products is passed */}
       <FeaturedHealthTips></FeaturedHealthTips>
+      <WhyUs></WhyUs>
     </div>
   );
 };

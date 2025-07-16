@@ -96,7 +96,7 @@ const Login = () => {
         {/* Register Link */}
         <p className="mt-4 text-center text-sm">
           New to this website?{' '}
-          <Link state={{ from }} className="link" to="/register">
+          <Link state={{ from }} className="link" to="/auth/register">
             Register
           </Link>
         </p>
