@@ -27,7 +27,7 @@ const CategoryCardContainer = () => {
           <CategoryCard key={category._id} category={category} /> // ✅ Pass prop as `category`
         ))
       ) : (
-        <p>No categories available.</p>
+        <p>Failed to load categories</p>
       )}
     </div>
   );
