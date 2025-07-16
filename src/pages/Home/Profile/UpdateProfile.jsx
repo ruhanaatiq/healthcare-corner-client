@@ -115,7 +115,7 @@ const UpdateProfile = () => {
 
       {/* Payment History */}
       <h3 className="text-xl font-semibold mb-2 text-red-600">Payment History</h3>
-      <button className="btn btn-outline mb-3" onClick={downloadPDF}>Download PDF</button>
+      <button className="btn btn-outline mb-3 bg-red-700" onClick={downloadPDF}>Download PDF</button>
       <table className="table-auto w-full border">
         <thead className="bg-red-700">
           <tr>
@@ -124,7 +124,7 @@ const UpdateProfile = () => {
             <th className="border px-4 py-2">Date</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='text-red-700'>
           {payments.map(p => (
             <tr key={p._id}>
               <td className="border px-4 py-2">${p.total.toFixed(2)}</td>

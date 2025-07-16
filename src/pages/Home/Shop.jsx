@@ -48,10 +48,10 @@ const Shop = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Shop Medicines</h2>
+      <h2 className="text-2xl font-bold mb-4 text-red-700">Shop Medicines</h2>
 
       {/* Category Filter */}
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-2 text-red-700">
         <button
           onClick={() => setSelectedCategory('all')}
           className={`btn ${selectedCategory === 'all' ? 'btn-primary' : 'btn-outline'}`}
@@ -70,7 +70,7 @@ const Shop = () => {
       </div>
 
       {/* Medicine Table */}
-      <table className="table-auto w-full border">
+      <table className="table-auto w-full border ">
         <thead>
           <tr className="bg-white text-red-600">
             <th className="border px-4 py-2">Image</th>
@@ -79,7 +79,7 @@ const Shop = () => {
             <th className="border px-4 py-2">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='bg-red-600'>
           {medicines.map(medicine => (
             <tr key={medicine._id}>
               <td className="border px-4 py-2">

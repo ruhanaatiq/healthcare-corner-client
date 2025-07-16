@@ -13,7 +13,7 @@ const CartItem = ({ item }) => {
   };
 
   return (
-    <div className="border p-4 mb-2 rounded flex justify-between items-center shadow">
+    <div className="border p-4 mb-2 rounded flex justify-between items-center shadow text-red-700">
       <div>
         <h3 className="font-bold text-lg">{item.name}</h3>
         <p className="text-sm text-gray-600">${item.price} per unit</p>
