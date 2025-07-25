@@ -20,7 +20,7 @@ const Shop = () => {
   } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const res = await axios.get('/api/categories');
+      const res = await axios.get('/categories');
       return res.data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes

@@ -12,7 +12,7 @@ const Banner = () => {
   useEffect(() => {
     const fetchBannerMedicines = async () => {
       try {
-       const res = await axios.get('/api/medicines');
+       const res = await axios.get('/medicines');
         const filtered = res.data?.filter(med => med.isBanner === true);
         setBannerMedicines(filtered);
       } catch (err) {
