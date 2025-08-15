@@ -36,8 +36,8 @@ const Shop = () => {
     queryFn: async () => {
       const url =
         selectedCategory === 'all'
-          ? '/api/medicines'
-          : `/api/medicines/category/${selectedCategory}`;
+          ? '/medicines'
+          : `/medicines/category/${selectedCategory}`;
       const res = await axios.get(url);
       return res.data;
     },
