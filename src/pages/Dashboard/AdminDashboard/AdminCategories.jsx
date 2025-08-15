@@ -21,7 +21,7 @@ const AdminCategories = () => {
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/api/categories');
+      const res = await axiosSecure.get('/categories');
       return res.data;
     }
   });
@@ -30,9 +30,9 @@ const AdminCategories = () => {
   const addOrUpdateCategory = useMutation({
     mutationFn: async (data) => {
       if (editId) {
-        return axiosSecure.patch(`/api/categories/${editId}`, data);
+        return axiosSecure.patch(`/categories/${editId}`, data);
       }
-      return axiosSecure.post('/api/categories', data);
+      return axiosSecure.post('/categories', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
@@ -44,7 +44,7 @@ const AdminCategories = () => {
 
   // ✅ Delete category
   const deleteCategory = useMutation({
-    mutationFn: async (id) => axiosSecure.delete(`/api/categories/${id}`),
+    mutationFn: async (id) => axiosSecure.delete(`/categories/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['categories']);
       toast.success('Category deleted');
