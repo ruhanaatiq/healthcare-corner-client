@@ -9,18 +9,24 @@ const useRole = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let ignore = false;
+
     const fetchRole = async () => {
-      if (authLoading) return; // Wait until Firebase finishes
+      if (authLoading) return; // wait for Firebase auth to settle
 
       if (user?.email) {
         try {
-          const res = await axiosSecure.get(`/api/users/role/${user.email}`);
-          setRole(res.data?.role || null);
+          const url = `/users/role/${encodeURIComponent(user.email)}`; // ✅ no extra /api
+          const res = await axiosSecure.get(url);
+          if (!ignore) setRole(res.data?.role ?? null);
         } catch (err) {
-          console.error('❌ Failed to fetch role:', err);
-          setRole(null);
+          // Helpful debugging
+          const status = err.response?.status;
+          const data = err.response?.data;
+          console.error('❌ Failed to fetch role:', status, data || err.message);
+          if (!ignore) setRole(null);
         } finally {
-          setLoading(false);
+          if (!ignore) setLoading(false);
         }
       } else {
         setRole(null);
@@ -29,7 +35,8 @@ const useRole = () => {
     };
 
     fetchRole();
-  }, [user?.email, authLoading, axiosSecure]);
+    return () => { ignore = true; };
+  }, [user?.email, authLoading]); // axiosSecure is stable; omit to avoid refires
 
   return { role, loading };
 };
