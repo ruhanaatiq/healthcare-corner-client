@@ -15,7 +15,7 @@ const AdminBannerManagement = () => {
   } = useQuery({
     queryKey: ['admin-medicines'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/api/medicines');
+      const res = await axiosSecure.get('/medicines');
       return res.data;
     },
     staleTime: 1000 * 60 * 3, // 3 minutes
@@ -24,7 +24,7 @@ const AdminBannerManagement = () => {
   // ✅ Mutation for banner toggle
   const mutation = useMutation({
     mutationFn: async ({ id, currentStatus }) => {
-      await axiosSecure.patch(`/api/medicines/${id}/banner`, {
+      await axiosSecure.patch(`/medicines/${id}/banner`, {
         isBanner: !currentStatus,
       });
     },

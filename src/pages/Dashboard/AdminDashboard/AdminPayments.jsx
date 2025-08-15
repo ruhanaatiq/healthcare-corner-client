@@ -9,13 +9,13 @@ const AdminPayments = () => {
   const { data: payments = [], isLoading, isError } = useQuery({
     queryKey: ['payments'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/api/payments');
+      const res = await axiosSecure.get('/payments');
       return res.data;
     }
   });
 
   const approvePayment = useMutation({
-    mutationFn: (id) => axiosSecure.patch(`/api/payments/${id}`),
+    mutationFn: (id) => axiosSecure.patch(`/payments/${id}`),
     onSuccess: () => {
       toast.success('Payment approved!');
       queryClient.invalidateQueries(['payments']);
