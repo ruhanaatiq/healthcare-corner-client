@@ -16,13 +16,13 @@ const UpdateProfile = () => {
  useEffect(() => {
   const fetchUserData = async () => {
     if (user?.email) {
-      const roleRes = await axiosSecure.get(`/api/users/role/${user.email}`);
+      const roleRes = await axiosSecure.get(`/users/role/${user.email}`);
       const userData = { ...user, role: roleRes.data.role };
       setUserInfo(userData);
       setEditableName(user.displayName || user.name || '');
       setPhotoURL(user.photoURL || '');
 
-      const paymentRes = await axiosSecure.get('/api/payments');
+      const paymentRes = await axiosSecure.get('/payments');
       const userPayments = paymentRes.data.filter(p => p.userEmail === user.email);
       setPayments(userPayments);
     }
@@ -38,7 +38,7 @@ const UpdateProfile = () => {
         name: editableName,
         photoURL
       };
-      await axiosSecure.patch(`/api/users/promote/${user.email}`, updated);
+      await axiosSecure.patch(`/users/promote/${user.email}`, updated);
       toast.success('Profile updated');
     } catch {
       toast.error('Update failed');

@@ -50,7 +50,7 @@ const { user, loading } = useContext(AuthContext);  const axiosSecure = useAxios
   const fetchCart = async () => {
     if (!loading && user?.email) {
       try {
-        const res = await axiosSecure.get(`/api/cart/${user.email}`);
+        const res = await axiosSecure.get(`/cart/${user.email}`);
         dispatch({ type: 'SET', payload: res.data || [] });
       } catch (err) {
         console.error('Cart fetch error:', err);
@@ -64,7 +64,7 @@ useEffect(() => {
   const saveCart = async () => {
     if (!loading && user?.email) {
       try {
-        await axiosSecure.post('/api/cart', {
+        await axiosSecure.post('/cart', {
           userEmail: user.email,
           cartItems: cart,
         });

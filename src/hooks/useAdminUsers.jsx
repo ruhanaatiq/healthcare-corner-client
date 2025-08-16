@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from './useAxiosSecure';
-import useAuth from './useAuth'; // import the auth hook
+import useAuth from './useAuth';
 
 const useAdminUsers = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
 
   return useQuery({
-    queryKey: ['admin-users', user?.email], // optionally add user email
-    enabled: !loading && !!user, // 🔥 waits until auth is ready
+    queryKey: ['admin-users', user?.email],
+    enabled: !loading && !!user,
     queryFn: () =>
-      axiosSecure.get('/api/admin/users').then(res => res.data),
+      axiosSecure.get('/users').then(res => res.data), // ✅ fixed
   });
 };
 
