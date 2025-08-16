@@ -16,22 +16,20 @@ const Login = () => {
   const from = location.state?.from || '/';
 
   // Save user to DB (optional: update last login time)
-  const saveUserToDB = async (user) => {
-    try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.displayName || 'Anonymous',
-          photoURL: user.photoURL || '',
-          last_log_in: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to save user to DB:', error);
-    }
-  };
+ // Save user to DB (creates if not exists)
+const saveUserToDB = async (user) => {
+  try {
+    await axiosSecure.post('/users', {
+      email: user.email,
+      name: user.displayName || 'Anonymous',
+      photoURL: user.photoURL || '',
+      last_log_in: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Failed to save user to DB:', error.response?.data || error.message);
+  }
+};
+
 
   const onSubmit = async (data) => {
     try {
