@@ -68,7 +68,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <PrivateRoute><DashboardLayout /></PrivateRoute> },
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute> ,
+    children:[
+     { path: "update-profile", element: <UpdateProfile /> }
+
+   ]
+},
   // User Dashboard
   {
     path: '/dashboard/user',

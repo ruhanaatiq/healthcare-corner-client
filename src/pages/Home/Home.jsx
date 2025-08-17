@@ -4,33 +4,35 @@ import CategoryCardContainer from './Category/CategoryCardContainer';
 import DiscountProducts from './DiscountProducts/DiscountProducts';
 import FeaturedHealthTips from './FeaturedHealthtips';
 import WhyUs from './WhyUs';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
-import useAuth from '../../hooks/useAuth';
+import useAxios from '../../hooks/useAxios';        // 👈 use public axios
 import toast from 'react-hot-toast';
 
 const Home = () => {
-  const { user, loading: authLoading } = useAuth(); // wait for auth
-  const axiosSecure = useAxiosSecure();
+  const axios = useAxios();                          // 👈 no secure axios here
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMedicines = async () => {
-      if (authLoading) return;
+    let cancelled = false;
 
+    (async () => {
       try {
-        const res = await axiosSecure.get('/api/medicines');
-        setMedicines(res.data);
+        const res = await axios.get('/medicines');   // 👈 NOT /api/medicines
+        if (!cancelled) setMedicines(res.data || []);
       } catch (err) {
-        console.error('Error fetching medicines:', err);
+        console.error(
+          'Error fetching medicines:',
+          err?.response?.status,
+          (err?.config?.baseURL || '') + (err?.config?.url || '')
+        );
         toast.error('Failed to load medicines');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    };
+    })();
 
-    fetchMedicines();
-  }, [authLoading, axiosSecure]);
+    return () => { cancelled = true; };
+  }, [axios]);
 
   return (
     <div>

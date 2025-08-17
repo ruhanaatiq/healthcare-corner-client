@@ -13,8 +13,12 @@ const tips = [
 
 const FeaturedHealthTips = () => {
   useEffect(() => {
-    document.title = "Health Tips | Healthcare Corner";
-  }, []);
+    document.title = " Healthcare Corner | Health Tips";
+  const favicon = document.getElementById("favicon");
+  if (favicon) {
+    favicon.href ="/src/assets/logo.png"; 
+  }
+}, []);
 
   return (
     <motion.section

@@ -45,8 +45,8 @@ const SellerMedicines = () => {
           </thead>
           <tbody>
             {medicines.map((med) => (
-              <tr key={med._id} className="border-b hover:bg-gray-100">
-                <td className="p-3">
+              <tr key={med._id} className="border-b hover:bg-gray-100 text-red-700">
+                <td className="p-3 ">
                   <img
                     src={med.imageUrl || 'https://via.placeholder.com/50'}
                     alt={med.name}

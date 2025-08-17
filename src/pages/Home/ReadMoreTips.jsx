@@ -16,8 +16,12 @@ const moreTips = [
 
 const ReadMoreTips = () => {
   useEffect(() => {
-    document.title = 'More Health Tips | Healthcare Corner';
-  }, []);
+  document.title = "Healthcare Corner | Health Tips";
+  const favicon = document.getElementById("favicon");
+  if (favicon) {
+    favicon.href = "/logo.png"; 
+  }
+}, []);
 
   return (
     <motion.section
